@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    font-family: "Roboto", sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply bg-blue-500 text-white font-bold py-2 px-4 rounded;
+  }
+  .siderbar--active {
+    @apply !translate-x-0 duration-300 ease-in-out;
+  }
+}
+
+@layer utilities {
+  .siderbar--text {
+    @apply text-gray-600 hover:text-gray-800 duration-300;
+  }
+}
