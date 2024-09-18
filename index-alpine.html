@@ -31,8 +31,9 @@
           <div class="flex items-center text-white space-x-4 lg:space-x-8">
             <!-- 列表 -->
             <ul class="hidden lg:flex space-x-8">
-              <li class="relative">
+              <li class="relative" x-data="headerDropdown()">
                 <div
+                  @click.prevent="isOpen=!isOpen"
                   id="desktop-company-btn"
                   class="flex gap-1 items-center hover:text-gray-800 duration-300"
                 >
@@ -46,8 +47,10 @@
                 </div>
 
                 <ul
+                  x-show="isOpen"
+                  @click.outside="isOpen=false"
                   id="desktop-company-menu"
-                  class="absolute top-8 left-0 bg-white p-4 rounded-lg shadow-sm w-[120px] flex flex-col gap-2 hidden transition-all duration-300"
+                  class="absolute top-8 left-0 bg-white p-4 rounded-lg shadow-sm w-[120px] flex flex-col gap-2 transition-all duration-300"
                 >
                   <li class="siderbar--text"><a href="#">AboutUs</a></li>
                   <li class="siderbar--text"><a href="#">Library</a></li>
@@ -81,61 +84,86 @@
               </li>
             </ul>
 
-            <button
-              class="lg:hidden order-2 flex items-center"
-              id="sidebar-open-btn"
-            >
-              <span class="material-symbols-outlined"> menu </span>
-            </button>
+            <!-- 手機版menu按鈕 -->
+            <div x-data="headerSidebar()">
+              <button
+                class="lg:hidden order-3 flex items-center"
+                @click="isOpen=true"
+              >
+                <span class="material-symbols-outlined"> menu </span>
+              </button>
+
+              <!-- sidebar -->
+              <div
+                x-show="isOpen"
+                x-transition:enter="transition transform ease-out duration-300"
+                x-transition:enter-start="translate-x-full"
+                x-transition:enter-end="translate-x-0"
+                x-transition:leave="transition transform ease-in duration-300"
+                x-transition:leave-start="translate-x-0"
+                x-transition:leave-end="translate-x-full"
+                id="sidebar"
+                class="absolute top-0 left-0 h-screen overflow-hidden w-full bg-gray-200 !ml-0 z-50"
+              >
+                <div class="container">
+                  <button
+                    id="sidebar-close-btn"
+                    class="p-4 flex ms-auto text-gray-500"
+                    @click="isOpen=false"
+                  >
+                    <span class="material-symbols-outlined"> menu </span>
+                  </button>
+
+                  <ul class="flex flex-col gap-4 py-20 px-8">
+                    <li class="flex flex-col gap-2">
+                      <div
+                        class="flex gap-1 items-center"
+                        id="siderbar-company-btn"
+                      >
+                        <a href="#" class="siderbar--text">Company</a>
+
+                        <span
+                          class="material-symbols-outlined"
+                          id="mobile-siderbar-arrow"
+                        >
+                          keyboard_arrow_down
+                        </span>
+                      </div>
+
+                      <div
+                        id="siderbar-company-menu"
+                        class="grid duration-300 trasition-all"
+                        style="grid-template-rows: 0fr"
+                      >
+                        <ul
+                          class="grid grid-cols-1 gap-2 ml-4 overflow-hidden"
+                          id="siderbar-company-list"
+                        >
+                          <li class="siderbar--text">
+                            <a href="#">AboutUs</a>
+                          </li>
+                          <li class="siderbar--text">
+                            <a href="#">Library</a>
+                          </li>
+                          <li class="siderbar--text">
+                            <a href="#">Resources</a>
+                          </li>
+                          <li class="siderbar--text">
+                            <a href="#">Pro Version</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </li>
+                    <li><a href="#" class="siderbar--text">Team</a></li>
+                    <li><a href="#" class="siderbar--text">Contacts</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </nav>
-
-    <!-- sidebar -->
-    <div
-      id="sidebar"
-      class="absolute top-0 left-0 h-screen overflow-hidden w-full bg-gray-200 !ml-0 translate-x-full z-50 duration-300"
-    >
-      <div class="container">
-        <button id="sidebar-close-btn" class="p-4 flex ms-auto text-gray-500">
-          <span class="material-symbols-outlined"> menu </span>
-        </button>
-
-        <ul class="flex flex-col gap-4 py-20 px-8">
-          <li class="flex flex-col gap-2">
-            <div class="flex gap-1 items-center" id="siderbar-company-btn">
-              <a href="#" class="siderbar--text">Company</a>
-
-              <span
-                class="material-symbols-outlined"
-                id="mobile-siderbar-arrow"
-              >
-                keyboard_arrow_down
-              </span>
-            </div>
-
-            <div
-              id="siderbar-company-menu"
-              class="grid duration-300 trasition-all"
-              style="grid-template-rows: 0fr"
-            >
-              <ul
-                class="grid grid-cols-1 gap-2 ml-4 overflow-hidden"
-                id="siderbar-company-list"
-              >
-                <li class="siderbar--text"><a href="#">AboutUs</a></li>
-                <li class="siderbar--text"><a href="#">Library</a></li>
-                <li class="siderbar--text"><a href="#">Resources</a></li>
-                <li class="siderbar--text"><a href="#">Pro Version</a></li>
-              </ul>
-            </div>
-          </li>
-          <li><a href="#" class="siderbar--text">Team</a></li>
-          <li><a href="#" class="siderbar--text">Contacts</a></li>
-        </ul>
-      </div>
-    </div>
 
     <!-- 輪播 -->
     <div class="swiper h-[300px] lg:h-[520px] z-10 -mt-[56px]">
@@ -167,13 +195,14 @@
     </div>
 
     <!-- Tab -->
-    <section>
+    <section x-data="tab()">
       <!-- tab -->
       <div class="bg-[#F5F5F5]">
         <div class="container">
           <ul class="py-8 flex justify-center gap-4 items-center">
             <li class="group">
               <button
+                @click="handleChangeTab(0)"
                 type="button"
                 data-tab="tab1"
                 class="tab-button duration-300 text-gray-600 group-hover:text-gray-800 py-4"
@@ -188,7 +217,7 @@
 
             <li>/</li>
 
-            <li class="group">
+            <li class="group" @click="handleChangeTab(1)">
               <button
                 type="button"
                 data-tab="tab2"
@@ -203,7 +232,7 @@
 
             <li>/</li>
 
-            <li class="group">
+            <li class="group" @click="handleChangeTab(2)">
               <button
                 type="button"
                 data-tab="tab3"
@@ -218,7 +247,7 @@
 
             <li>/</li>
 
-            <li class="group">
+            <li class="group" @click="handleChangeTab(3)">
               <button
                 type="button"
                 data-tab="tab4"
@@ -237,7 +266,7 @@
       <div class="bg-[#E4E3E1] h-56 md:h-72 text-sm">
         <div class="container h-full">
           <div class="flex justify-center items-center text-gray-500 h-full">
-            <p id="tab1" class="tab-content lg:w-1/3">
+            <p x-show="activeTab===0" id="tab1" class="tab-content lg:w-1/3">
               This is some placeholder content the
               <strong class="text-gray-800"
                 >Profile tab's associated content</strong
@@ -246,7 +275,7 @@
               visibility and styling.
             </p>
 
-            <p id="tab2" class="tab-content lg:w-1/3 hidden">
+            <p x-show="activeTab===1" id="tab2" class="tab-content lg:w-1/3">
               This is some placeholder content the
               <strong class="text-gray-800"
                 >Dashboard tab's associated content.</strong
@@ -255,7 +284,7 @@
               visibility and styling.
             </p>
 
-            <p id="tab3" class="tab-content lg:w-1/3 hidden">
+            <p x-show="activeTab===2" id="tab3" class="tab-content lg:w-1/3">
               This is some placeholder content the
               <strong class="text-gray-800"
                 >Settings tab's associated content.</strong
@@ -264,7 +293,7 @@
               visibility and styling.
             </p>
 
-            <p id="tab4" class="tab-content lg:w-1/3 hidden">
+            <p x-show="activeTab===3" id="tab4" class="tab-content lg:w-1/3">
               This is some placeholder content the
               <strong class="text-gray-800"
                 >Contacts tab's associated content</strong
@@ -278,11 +307,13 @@
     </section>
 
     <!-- accordion -->
-    <section>
+    <section x-data="accordion()">
       <!-- title1 -->
       <div
+        @click="handleChangeTab(0)"
         data-accordion="accordion1"
-        class="accordion-button p-5 flex justify-between cursor-pointer text-gray-600 border-b !text-gray-800 bg-gray-100"
+        class="accordion-button p-5 flex justify-between cursor-pointer text-gray-600 border-b text-gray-600"
+        :class="{'!text-gray-800 bg-gray-100': activeTab===0 }"
       >
         <p>What is Flowbite?</p>
 
@@ -291,9 +322,15 @@
 
       <!-- content1 -->
       <div
+        x-show="activeTab===0"
+        x-transition:enter="transform transition ease-out duration-300"
+        x-transition:enter-start="-translate-y-full"
+        x-transition:enter-end="translate-y-0"
+        x-transition:leave="transform transition ease-out"
+        x-transition:leave-start="translate-y-0"
+        x-transition:leave-end="-translate-y-full"
         id="accordion1"
-        class="grid accordion-content duration-300"
-        style="grid-template-rows: 1fr"
+        class="accordion-content"
       >
         <div class="text-gray-500 border-b overflow-hidden">
           <div class="p-5">
@@ -317,8 +354,10 @@
 
       <!-- title2 -->
       <div
+        @click="handleChangeTab(1)"
         data-accordion="accordion2"
         class="accordion-button p-5 flex justify-between cursor-pointer text-gray-600 border-b"
+        :class="{'!text-gray-800 bg-gray-100': activeTab===1 }"
       >
         <p>Is there a Figma file available?</p>
 
@@ -327,9 +366,56 @@
 
       <!-- content2 -->
       <div
+        x-show="activeTab===1"
+        x-transition:enter="transform transition ease-out duration-300"
+        x-transition:enter-start="-translate-y-full"
+        x-transition:enter-end="translate-y-0"
+        x-transition:leave="transform transition ease-out"
+        x-transition:leave-start="translate-y-0"
+        x-transition:leave-end="-translate-y-full"
         id="accordion2"
-        class="grid accordion-content duration-300"
-        style="grid-template-rows: 0fr"
+        class="accordion-content"
+      >
+        <div class="text-gray-500 border-b overflow-hidden">
+          <div class="p-5">
+            <p class="mb-2">
+              Flowbite is first conceptualized and designed using the Figma
+              software so everything you see in the library has a design
+              equivalent in our Figma file.
+            </p>
+            <p class="mb-4">
+              Check out the
+              <a href="#" class="text-gray-800">Figma design system</a>
+              based on the utility classes from Tailwind CSS and components from
+              Flowbite.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- title3 -->
+      <div
+        @click="handleChangeTab(2)"
+        data-accordion="accordion2"
+        class="accordion-button p-5 flex justify-between cursor-pointer text-gray-600 border-b"
+        :class="{'!text-gray-800 bg-gray-100': activeTab===2 }"
+      >
+        <p>Is there a Figma file available?</p>
+
+        <span class="material-symbols-outlined"> keyboard_arrow_down </span>
+      </div>
+
+      <!-- content3 -->
+      <div
+        x-show="activeTab===2"
+        x-transition:enter="transform transition ease-out duration-300"
+        x-transition:enter-start="-translate-y-full"
+        x-transition:enter-end="translate-y-0"
+        x-transition:leave="transform transition ease-out"
+        x-transition:leave-start="translate-y-0"
+        x-transition:leave-end="-translate-y-full"
+        id="accordion2"
+        class="accordion-content"
       >
         <div class="text-gray-500 border-b overflow-hidden">
           <div class="p-5">
@@ -496,7 +582,7 @@
     </div> -->
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="./src/js/index.js"></script>
+    <script src="./src/js/alpine.js"></script>
 
     <!-- <script>
       function dropdown() {
