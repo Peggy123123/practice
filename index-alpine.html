@@ -20,16 +20,17 @@
     ></script>
   </head>
   <body>
-    <!-- header -->
-    <nav class="bg-transparent z-50 absolute top-0 left-0 w-full">
+    <header class="bg-transparent z-50 absolute top-0 left-0 w-full">
       <div class="container">
         <div class="flex justify-between items-center p-4">
           <div class="text-gray-800">
             <a href="#">Logo</a>
           </div>
 
-          <div class="flex items-center text-white space-x-4 lg:space-x-8">
-            <!-- 列表 -->
+          <!-- 電腦版header -->
+          <nav
+            class="hidden lg:flex items-center text-white space-x-4 lg:space-x-8"
+          >
             <ul class="hidden lg:flex space-x-8">
               <li class="relative" x-data="headerDropdown()">
                 <div
@@ -49,7 +50,6 @@
                 <ul
                   x-show="isOpen"
                   @click.outside="isOpen=false"
-                  id="desktop-company-menu"
                   class="absolute top-8 left-0 bg-white p-4 rounded-lg shadow-sm w-[120px] flex flex-col gap-2 transition-all duration-300"
                 >
                   <li class="siderbar--text"><a href="#">AboutUs</a></li>
@@ -73,7 +73,6 @@
 
             <div class="hidden lg:block lg:order-2">/</div>
 
-            <!-- 登入 -->
             <ul class="order-1 lg:order-3 flex space-x-4 lg:space-x-8">
               <li>
                 <a href="#" class="hover:text-gray-800 duration-300">Login</a>
@@ -83,87 +82,106 @@
                 <a href="#" class="hover:text-gray-800 duration-300">Sign up</a>
               </li>
             </ul>
+          </nav>
 
-            <!-- 手機版menu按鈕 -->
-            <div x-data="headerSidebar()">
-              <button
-                class="lg:hidden order-3 flex items-center"
-                @click="isOpen=true"
-              >
-                <span class="material-symbols-outlined"> menu </span>
-              </button>
-
-              <!-- sidebar -->
-              <div
-                x-show="isOpen"
-                x-transition:enter="transition transform ease-out duration-300"
-                x-transition:enter-start="translate-x-full"
-                x-transition:enter-end="translate-x-0"
-                x-transition:leave="transition transform ease-in duration-300"
-                x-transition:leave-start="translate-x-0"
-                x-transition:leave-end="translate-x-full"
-                id="sidebar"
-                class="absolute top-0 left-0 h-screen overflow-hidden w-full bg-gray-200 !ml-0 z-50"
-              >
-                <div class="container">
-                  <button
-                    id="sidebar-close-btn"
-                    class="p-4 flex ms-auto text-gray-500"
-                    @click="isOpen=false"
+          <!-- 手機版header -->
+          <nav class="lg:hidden" x-data="headerSidebar()">
+            <div class="flex items-center">
+              <ul class="flex space-x-4 lg:space-x-8">
+                <li>
+                  <a
+                    href="#"
+                    class="hover:text-gray-800 duration-300 text-white"
+                    >Login</a
                   >
-                    <span class="material-symbols-outlined"> menu </span>
-                  </button>
+                </li>
+                <li class="text-white">/</li>
+                <li>
+                  <a
+                    href="#"
+                    class="hover:text-gray-800 duration-300 text-white"
+                    >Sign up</a
+                  >
+                </li>
+              </ul>
 
-                  <ul class="flex flex-col gap-4 py-20 px-8">
-                    <li class="flex flex-col gap-2">
-                      <div
-                        class="flex gap-1 items-center"
-                        id="siderbar-company-btn"
+              <button class="flex items-center ml-4" id="sidebar-open-btn">
+                <span
+                  @click="isOpen=true"
+                  class="material-symbols-outlined text-white hover:text-gray-800 duration-300"
+                  >menu</span
+                >
+              </button>
+            </div>
+
+            <!-- sidebar -->
+            <div
+              x-show="isOpen"
+              x-transition:enter="transition transform ease-out duration-300"
+              x-transition:enter-start="translate-x-full"
+              x-transition:enter-end="translate-x-0"
+              x-transition:leave="transition transform ease-in duration-300"
+              x-transition:leave-start="translate-x-0"
+              x-transition:leave-end="translate-x-full"
+              id="sidebar"
+              class="fixed top-0 left-0 h-screen w-full bg-gray-200 !ml-0 z-[999] transition duration-300 ease-in-out"
+            >
+              <div class="container">
+                <button
+                  id="sidebar-close-btn"
+                  class="p-4 flex ms-auto"
+                  @click.prevent="isOpen=false"
+                >
+                  <span class="material-symbols-outlined text-gray-500"
+                    >close</span
+                  >
+                </button>
+
+                <ul class="flex flex-col gap-4 py-20 px-8">
+                  <li class="flex flex-col gap-2">
+                    <div
+                      class="flex gap-1 items-center"
+                      id="siderbar-company-btn"
+                    >
+                      <a href="#" class="siderbar--text">Company</a>
+
+                      <span
+                        class="material-symbols-outlined text-gray-500"
+                        id="mobile-siderbar-arrow"
                       >
-                        <a href="#" class="siderbar--text">Company</a>
+                        keyboard_arrow_down
+                      </span>
+                    </div>
 
-                        <span
-                          class="material-symbols-outlined"
-                          id="mobile-siderbar-arrow"
-                        >
-                          keyboard_arrow_down
-                        </span>
-                      </div>
-
-                      <div
-                        id="siderbar-company-menu"
-                        class="grid duration-300 trasition-all"
-                        style="grid-template-rows: 0fr"
+                    <div
+                      id="siderbar-company-menu"
+                      class="grid duration-300 transition-all"
+                      style="grid-template-rows: 0fr"
+                    >
+                      <ul
+                        class="grid grid-cols-1 gap-2 ml-4 overflow-hidden"
+                        id="siderbar-company-list"
                       >
-                        <ul
-                          class="grid grid-cols-1 gap-2 ml-4 overflow-hidden"
-                          id="siderbar-company-list"
-                        >
-                          <li class="siderbar--text">
-                            <a href="#">AboutUs</a>
-                          </li>
-                          <li class="siderbar--text">
-                            <a href="#">Library</a>
-                          </li>
-                          <li class="siderbar--text">
-                            <a href="#">Resources</a>
-                          </li>
-                          <li class="siderbar--text">
-                            <a href="#">Pro Version</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                    <li><a href="#" class="siderbar--text">Team</a></li>
-                    <li><a href="#" class="siderbar--text">Contacts</a></li>
-                  </ul>
-                </div>
+                        <li class="siderbar--text"><a href="#">AboutUs</a></li>
+                        <li class="siderbar--text"><a href="#">Library</a></li>
+                        <li class="siderbar--text">
+                          <a href="#">Resources</a>
+                        </li>
+                        <li class="siderbar--text">
+                          <a href="#">Pro Version</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li><a href="#" class="siderbar--text">Team</a></li>
+                  <li><a href="#" class="siderbar--text">Contacts</a></li>
+                </ul>
               </div>
             </div>
-          </div>
+          </nav>
         </div>
       </div>
-    </nav>
+    </header>
 
     <!-- 輪播 -->
     <div class="swiper h-[300px] lg:h-[520px] z-10 -mt-[56px]">
@@ -199,7 +217,7 @@
       <!-- tab -->
       <div class="bg-[#F5F5F5]">
         <div class="container">
-          <ul class="py-8 flex justify-center gap-4 items-center">
+          <ul class="py-8 flex justify-center gap-2 lg:gap-4 items-center">
             <li class="group">
               <button
                 @click="handleChangeTab(0)"
@@ -437,11 +455,11 @@
 
     <!-- form -->
     <section class="container py-20">
-      <div class="flex justify-center items-center gap-3">
+      <div class="flex flex-col lg:flex-row justify-center items-center gap-3">
         <select
           name="country"
           id="country"
-          class="border border-gray-300 text-sm text-gray-900 rounded-lg bg-gray-50 p-2.5 pe-5 focus:!outline-none focus:border-gray-600 duration-300"
+          class="w-full lg:w-fit border border-gray-300 text-sm text-gray-900 rounded-lg bg-gray-50 p-2.5 pe-5 focus:!outline-none focus:border-gray-600 duration-300"
         >
           <option value="">Choose a country</option>
           <option value="usa">USA</option>
@@ -450,7 +468,7 @@
           <option value="germany">Germany</option>
         </select>
 
-        <div class="relative">
+        <div class="relative w-full lg:w-fit">
           <span
             class="material-symbols-outlined absolute left-2.5 top-3 text-gray-500"
           >
@@ -460,11 +478,11 @@
           <input
             type="text "
             placeholder="Search branch name..."
-            class="focus:!outline-none text-gray-900 pl-2.5 bg-transparent border border-gray-300 rounded-lg bg-gray-50 rounded-lg p-2.5 !pl-10 focus:border-gray-600 duration-300 focus:!outline-none"
+            class="w-full lg:w-fit focus:!outline-none text-gray-900 pl-2.5 bg-transparent border border-gray-300 rounded-lg bg-gray-50 rounded-lg p-2.5 !pl-10 focus:border-gray-600 duration-300 focus:!outline-none"
           />
         </div>
         <button
-          class="border border-gray-300 rounded-lg px-2.5 py-1 text-white bg-gray-600 hover:bg-gray-800 duration-300 !h-fit"
+          class="ms-auto lg:ms-0 border border-gray-300 rounded-lg px-2.5 py-1 text-white bg-gray-600 hover:bg-gray-800 duration-300 !h-fit"
         >
           <span class="material-symbols-outlined !text-2xl"> search </span>
         </button>
@@ -582,7 +600,8 @@
     </div> -->
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="./src/js/alpine.js"></script>
+    <!-- <script src="src/js/index.js"></script> -->
+    <script src="src/js/alpine.js"></script>
 
     <!-- <script>
       function dropdown() {

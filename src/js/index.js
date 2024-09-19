@@ -4,11 +4,13 @@ const sidebarCloseBtn = document.getElementById("sidebar-close-btn");
 const sidebar = document.getElementById("sidebar");
 
 sidebarBtn.addEventListener("click", () => {
-  sidebar.classList.add("siderbar--active");
+  sidebar.classList.remove("translate-x-full");
+  document.body.style.overflow = "hidden";
 });
 
 sidebarCloseBtn.addEventListener("click", () => {
-  sidebar.classList.remove("siderbar--active");
+  sidebar.classList.add("translate-x-full");
+  document.body.style.overflow = "auto";
 });
 
 const siderbarCompanyBtn = document.getElementById("siderbar-company-btn");
